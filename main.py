@@ -419,36 +419,44 @@ while running:
 					makewally = ((my+(25*zoom)-camy)//(50*zoom))
 				elif mouseup and not (makewallx in wallx and makewally in wally and ((mx+(25*zoom)-camx)//(50*zoom))*(50*zoom)+camx in wallx1 and ((my+(25*zoom)-camy)//(50*zoom))*(50*zoom)+camy in wally1) and not indoor(pygame.Rect(((mx+(25*zoom)-camx)//(50*zoom))*(50*zoom),((my+(25*zoom)-camy)//(50*zoom))*(50*zoom),5,5)):
 						#if (makewallx == ((mx+(25*zoom)-camx)//(50*zoom)) and (makewally < ((my+(25*zoom)-camy)//(50*zoom)) and indoor(pygame.Rect((makewallx*(50*zoom))+camx, (makewally*(50*zoom))+camy-(4*zoom),8*zoom,abs((((my+(25*zoom)-camy)//(50*zoom))*(50*zoom))-(makewally*(50*zoom)))))))    or   (makewally > ((my+(25*zoom)-camy)//(50*zoom)) and indoor(   pygame.Rect((makewallx*(50*zoom))+camx, (makewally*(50*zoom))+camy-(4*zoom)-abs((((my+(25*zoom)-camy)//(50*zoom))*(50*zoom))-(makewally*(50*zoom))),8*zoom,abs((((my+(25*zoom)-camy)//(50*zoom))*(50*zoom))-(makewally*(50*zoom)))    ))) or (makewallx < ((mx+(25*zoom)-camx)//(50*zoom)) and indoor(pygame.Rect((makewallx*(50*zoom))+camx, (makewally*(50*zoom))+camy-(4*zoom),abs((((mx+(25*zoom)-camx)//(50*zoom))*(50*zoom))-(makewallx*(50*zoom))),8*zoom))) or (makewallx > ((mx+(25*zoom)-camx)//(50*zoom)) and indoor(pygame.Rect((makewallx*(50*zoom))+camx-abs((((mx+(25*zoom)-camx)//(50*zoom))*(50*zoom))-(makewallx*(50*zoom))), (makewally*(50*zoom))+camy-(4*zoom),abs((((mx+(25*zoom)-camx)//(50*zoom))*(50*zoom))-(makewallx*(50*zoom)))))):
-					if makewallx == ((mx+(25*zoom)-camx)//(50*zoom)):
-						if makewally < ((my+(25*zoom)-camy)//(50*zoom)) and indoor(pygame.Rect((makewallx*(50*zoom))+camx, (makewally*(50*zoom))+camy-(4*zoom),8*zoom,abs((((my+(25*zoom)-camy)//(50*zoom))*(50*zoom))-(makewally*(50*zoom))))):
+					for i in range(len(doorx)):
+						if doorrot[i] == 270 or doorrot[i] == 180 and pygame.Rect((doorx[i]*50*zoom)+camx+10,(doory[i]*50*zoom)+camy+10,pygame.transform.scale(pygame.transform.rotate(doorshadow,doorrot[i]),(pygame.transform.rotate(doorshadow,doorrot[i]).get_width()*zoom,pygame.transform.rotate(doorshadow,doorrot[i]).get_height()*zoom)).get_width()-30   ,  pygame.transform.scale(pygame.transform.rotate(doorshadow,doorrot[i]),(pygame.transform.rotate(doorshadow,doorrot[i]).get_width()*zoom,pygame.transform.rotate(doorshadow,doorrot[i]).get_height()*zoom)).get_height()-25).clipline((makewallx, makewally), (((mx+(25*zoom)-camx)//(50*zoom)*(50*zoom)), ((my+(25*zoom)-camy)//(50*zoom)*(50*zoom)))):
 							wallx.append(makewallx)
 							wally.append(makewally)
 							wallx1.append(((mx+(25*zoom)-camx)//(50*zoom)))
 							wally1.append(((my+(25*zoom)-camy)//(50*zoom)))
 							makewallx = 0
 							makewally = 0
-						elif makewally > ((my+(25*zoom)-camy)//(50*zoom)) and indoor(pygame.Rect((makewallx*(50*zoom))+camx, (makewally*(50*zoom))+camy-(4*zoom)-abs((((my+(25*zoom)-camy)//(50*zoom))*(50*zoom))-(makewally*(50*zoom))),8*zoom,abs((((my+(25*zoom)-camy)//(50*zoom))*(50*zoom))-(makewally*(50*zoom))))):
+							break
+						elif doorrot[i] == 90 and pygame.Rect((doorx[i]*50*zoom)+20+camx+(pygame.transform.scale(doorclosed,(doorclosed.get_width()*zoom,doorclosed.get_height()*zoom)).get_height()) - pygame.transform.scale(pygame.transform.rotate(doorshadow,doorrot[i]),(pygame.transform.rotate(doorshadow,doorrot[i]).get_width()*zoom,pygame.transform.rotate(doorshadow,doorrot[i]).get_height()*zoom)).get_width(),(doory[i]*50*zoom)+10+camy,pygame.transform.scale(pygame.transform.rotate(doorshadow,doorrot[i]),(pygame.transform.rotate(doorshadow,doorrot[i]).get_width()*zoom,pygame.transform.rotate(doorshadow,doorrot[i]).get_height()*zoom)).get_width()-20,pygame.transform.scale(pygame.transform.rotate(doorshadow,doorrot[i]),(pygame.transform.rotate(doorshadow,doorrot[i]).get_width()*zoom,pygame.transform.rotate(doorshadow,doorrot[i]).get_height()*zoom)).get_height()-30).clipline((makewallx, makewally), (((mx+(25*zoom)-camx)//(50*zoom)*(50*zoom)), ((my+(25*zoom)-camy)//(50*zoom)*(50*zoom)))):
 							wallx.append(makewallx)
 							wally.append(makewally)
 							wallx1.append(((mx+(25*zoom)-camx)//(50*zoom)))
 							wally1.append(((my+(25*zoom)-camy)//(50*zoom)))
 							makewallx = 0
 							makewally = 0
-					else:
-						if makewallx < ((mx+(25*zoom)-camx)//(50*zoom)) and indoor(pygame.Rect((makewallx*(50*zoom))+camx, (makewally*(50*zoom))+camy-(4*zoom),abs((((mx+(25*zoom)-camx)//(50*zoom))*(50*zoom))-(makewallx*(50*zoom))),8*zoom)):
+							break
+						elif doorrot[i] == 360 and pygame.Rect((doorx[i]*50*zoom)+10+camx,(doory[i]*50*zoom)+camy+10+(10*zoom)+(pygame.transform.scale(doorclosed,(doorclosed.get_width()*zoom,doorclosed.get_height()*zoom)).get_height()) - pygame.transform.scale(pygame.transform.rotate(doorshadow,doorrot[i]),(pygame.transform.rotate(doorshadow,doorrot[i]).get_width()*zoom,pygame.transform.rotate(doorshadow,doorrot[i]).get_height()*zoom)).get_width()+10   ,pygame.transform.scale(pygame.transform.rotate(doorshadow,doorrot[i]),(pygame.transform.rotate(doorshadow,doorrot[i]).get_width()*zoom,pygame.transform.rotate(doorshadow,doorrot[i]).get_height()*zoom)).get_width()-30,pygame.transform.scale(pygame.transform.rotate(doorshadow,doorrot[i]),(pygame.transform.rotate(doorshadow,doorrot[i]).get_width()*zoom,pygame.transform.rotate(doorshadow,doorrot[i]).get_height()*zoom)).get_height()-20).clipline((makewallx, makewally), (((mx+(25*zoom)-camx)//(50*zoom)*(50*zoom)), ((my+(25*zoom)-camy)//(50*zoom)*(50*zoom)))):
 							wallx.append(makewallx)
 							wally.append(makewally)
 							wallx1.append(((mx+(25*zoom)-camx)//(50*zoom)))
 							wally1.append(((my+(25*zoom)-camy)//(50*zoom)))
 							makewallx = 0
 							makewally = 0
-						elif makewallx > ((mx+(25*zoom)-camx)//(50*zoom)) and indoor(pygame.Rect((makewallx*(50*zoom))+camx-abs((((mx+(25*zoom)-camx)//(50*zoom))*(50*zoom))-(makewallx*(50*zoom))), (makewally*(50*zoom))+camy-(4*zoom),abs((((mx+(25*zoom)-camx)//(50*zoom))*(50*zoom))-(makewallx*(50*zoom))),8*zoom)):
-							wallx.append(makewallx)
-							wally.append(makewally)
-							wallx1.append(((mx+(25*zoom)-camx)//(50*zoom)))
-							wally1.append(((my+(25*zoom)-camy)//(50*zoom)))
-							makewallx = 0
-							makewally = 0
+							break
+					
+
+
+
+
+
+					wallx.append(makewallx)
+					wally.append(makewally)
+					wallx1.append(((mx+(25*zoom)-camx)//(50*zoom)))
+					wally1.append(((my+(25*zoom)-camy)//(50*zoom)))
+					makewallx = 0
+					makewally = 0
+
 				mouseup = False
 			elif selected_room == -3 and not pygame.Rect(0, scry-100, scrx, 100).collidepoint(mx,my):
 				if not inwall(pygame.Rect(((mx-(doorshadow.get_width()/2))//(50*zoom))*(50*zoom)+10,((my-(doorshadow.get_height()/2))//(50*zoom))*(50*zoom)+10,doorshadow.get_width()-20,doorshadow.get_height()-20)):
