@@ -285,6 +285,9 @@ while running:
 				selected_room = -2
 			if event.ui_element == placedoors_button:
 				selected_room = -3
+			if event.ui_element == levelback_button:
+				scene = 5
+				hideui()
 
 		if event.type == pygame.MOUSEBUTTONDOWN:
 			if event.button == 4 and scene == 5.1:
@@ -320,6 +323,8 @@ while running:
 		fullscreen_button_off.show()
 		screen.blit(fullscreen_text,(scrx/2-100,scry/2 -40))
 	if scene == 5:
+		screen.blit(mainbackround, (0,0))
+
 		settings_back.show()
 		newlevel_button.show()
 		loadfile_button.show()
