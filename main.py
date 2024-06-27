@@ -7,7 +7,7 @@ pygame.init()
 starttime = time.time()
 pygame.mixer.init()
 bigfont = pygame.freetype.Font("font.ttf", 75)
-font = pygame.freetype.Font("font.ttf", 24)
+font = pygame.freetype.Font("font.ttf", 15)
 
 '''
 TODO
@@ -27,13 +27,13 @@ originalscreenheight = 1920/2
 originalscreenwidth = 1080/2
 
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-pygame.display.set_caption('Synapse')
+pygame.display.set_caption('Zero')
 scrx, scry = screen.get_size()
 
 running = True
 
 #images
-maintitle, rect = bigfont.render("Synapse", (0, 0, 0))
+maintitle, rect = bigfont.render("Zero", (0, 0, 0))
 mainbackround = pygame.image.load("backround.png")
 
 
@@ -100,13 +100,18 @@ doorclosed = pygame.image.load("doorclosed.png")
 dooropen = pygame.image.load("dooropen.png")
 doorshadow = pygame.image.load("doorshadow.png")
 
-placewalls_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((scrx-700,scry-90), (140, 70)),text='Place Walls',manager=manager)
-placedoors_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((scrx-560,scry-90), (140, 70)),text='Place Doors',manager=manager)
-playlevel_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((scrx-140,scry-90), (140, 70)),text='Play Level',manager=manager)
-savelevel_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((scrx-280,scry-90), (140, 70)),text='Save Level',manager=manager)
-togglehitboxes_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((scrx-420,scry-90), (140, 70)),text='Show Hitboxes',manager=manager)
-delete_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((scrx-800,scry-90), (100, 70)),text='Delete',manager=manager)
+placewalls_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((scrx-620,scry-90), (140, 70)),text='Place Walls',manager=manager)
+placedoors_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((scrx-480,scry-90), (140, 70)),text='Place Doors',manager=manager)
+placeelevators_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((scrx-240,scry-90), (140, 70)),text='Place Elevators',manager=manager)
+delete_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((scrx-140,scry-90), (100, 70)),text='Delete',manager=manager)
 
+playlevel_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((scrx-140,10), (140, 40)),text='Play Level',manager=manager)
+savelevel_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((scrx-280,10), (140, 40)),text='Save Level',manager=manager)
+togglehitboxes_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((scrx-420,10), (140, 40)),text='Show Hitboxes',manager=manager)
+levelback_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10,10), (140, 40)),text='Back',manager=manager)
+
+placeelevators_button.hide()
+levelback_button.hide()
 placewalls_button.hide()
 placedoors_button.hide()
 playlevel_button.hide()
@@ -133,12 +138,15 @@ def updateui():
 	loadfile_button.set_position((scrx/2-125, scry/2+35))
 	for i in range(len(rooms)):
 		rooms_buttons[i].set_position(((70 * i)+20,scry-90))
-	placewalls_button.set_position((scrx-700,scry-90))
-	placedoors_button.set_position((scrx-560,scry-90))
-	playlevel_button.set_position((scrx-140,scry-90))
-	savelevel_button.set_position((scrx-280,scry-90))
-	togglehitboxes_button.set_position((scrx-420,scry-90))
-	delete_button.set_position((scrx-800,scry-90))
+	placewalls_button.set_position((scrx-560,scry-90))
+	placedoors_button.set_position((scrx-420,scry-90))
+	delete_button.set_position((scrx-140,scry-90))
+	placeelevators_button.set_position((scrx-280,scry-90))
+
+	playlevel_button.set_position((scrx-140,10))
+	savelevel_button.set_position((scrx-280,10))
+	togglehitboxes_button.set_position((scrx-420,10))
+	levelback_button.set_position((10,10))
 
 def hideui():
 	singleplayer_button.hide()
@@ -160,7 +168,8 @@ def hideui():
 	savelevel_button.hide()
 	togglehitboxes_button.hide()
 	delete_button.hide()
-
+	placeelevators_button.hide()
+	levelback_button.hide()
 def inwall(rect):
 	#pygame.Rect.colliderect(rect1, rect)
 	for i in range(len(wallx)):
@@ -333,10 +342,13 @@ while running:
 		savelevel_button.show()
 		togglehitboxes_button.show()
 		delete_button.show()
+		placeelevators_button.show()
+		levelback_button.show()
+
 		touchingroom = False			
 		if len(roomtype) > 0 and selected_room >= 0:
 			for i in range(len(roomtype)):
-				if pygame.Rect.colliderect(pygame.Rect(roomx[i]*zoom*50+camx+5,roomy[i]*zoom*50+camy+5,(roomwidth[i]*zoom)-10,(roomheight[i]*zoom)-10), pygame.Rect((((mx+(25*zoom)-(pygame.transform.scale(rooms[selected_room], (250*zoom,250*zoom)).get_width()/2)-camx)//(50*zoom))*(50*zoom))+camx, (((my+(25*zoom)-(pygame.transform.scale(rooms[selected_room], (250*zoom,250*zoom)).get_height()/2)-camy)//(50*zoom))*(50*zoom))+camy, rooms[selected_room].get_width()/2*zoom, rooms[selected_room].get_height()/2*zoom)):
+				if pygame.Rect.colliderect(pygame.Rect(roomx[i]*zoom*50+camx+10*zoom,roomy[i]*zoom*50+camy+10*zoom,(roomwidth[i]*zoom)-20*zoom,(roomheight[i]*zoom)-20*zoom), pygame.Rect((((mx+(25*zoom)-(pygame.transform.scale(rooms[selected_room], (250*zoom,250*zoom)).get_width()/2)-camx)//(50*zoom))*(50*zoom))+camx, (((my+(25*zoom)-(pygame.transform.scale(rooms[selected_room], (250*zoom,250*zoom)).get_height()/2)-camy)//(50*zoom))*(50*zoom))+camy, rooms[selected_room].get_width()/2*zoom, rooms[selected_room].get_height()/2*zoom)):
 					touchingroom = True
 		
 		screen.fill((150,150,150))
@@ -353,7 +365,7 @@ while running:
 			mouseup = True
 
 		if event.type == pygame.MOUSEBUTTONDOWN:
-			if selected_room >= 0 and not pygame.Rect(0, scry-100, scrx, 100).collidepoint(mx,my) and touchingroom == False :
+			if selected_room >= 0 and not pygame.Rect(0, scry-100, scrx, 100).collidepoint(mx,my) and touchingroom == False  and not pygame.Rect(0, 0, scrx, 60).collidepoint(mx,my):
 				roomtype.append(selected_room)
 				roomx.append((mx+(25*zoom)-(pygame.transform.scale(rooms[selected_room], (250*zoom,250*zoom)).get_width()/2)-camx)//(50*zoom))
 				roomy.append((my+(25*zoom)-(pygame.transform.scale(rooms[selected_room], (250*zoom,250*zoom)).get_height()/2)-camy)//(50*zoom))
@@ -361,7 +373,7 @@ while running:
 				roomheight.append(rooms[selected_room].get_height()/2)
 				roomdir.append(objrot)
 
-			elif selected_room == -1 and not pygame.Rect(0, scry-100, scrx, 100).collidepoint(mx,my) and mouseup:
+			elif selected_room == -1 and not pygame.Rect(0, scry-100, scrx, 100).collidepoint(mx,my) and mouseup and not pygame.Rect(0, 0, scrx, 60).collidepoint(mx,my):
 				mouseup = False
 				deleted = False
 				for i in range(len(wallx)-1):
@@ -426,7 +438,7 @@ while running:
 								del doorrot[i]
 								deleted = True
 
-			elif selected_room == -2 and not pygame.Rect(0, scry-100, scrx, 100).collidepoint(mx,my):
+			elif selected_room == -2 and not pygame.Rect(0, scry-100, scrx, 100).collidepoint(mx,my) and not pygame.Rect(0, 0, scrx, 60).collidepoint(mx,my):
 				if makewallx == 0 and mouseup and not indoor(pygame.Rect(((mx+(25*zoom)-camx)//(50*zoom))*(50*zoom),((my+(25*zoom)-camy)//(50*zoom))*(50*zoom),5,5)):
 					makewallx =	((mx+(25*zoom)-camx)//(50*zoom))
 					makewally = ((my+(25*zoom)-camy)//(50*zoom))
@@ -442,7 +454,7 @@ while running:
 							tsfine = False
 						pygame.draw.line(screen,(255,255,255), (makewallx*(50*zoom)+camx,makewally*(50*zoom)+camy),(((mx+(25*zoom)-camx)//(50*zoom))*(50*zoom)+camx,((my+(25*zoom)-camy)//(50*zoom))*(50*zoom)+camy),10)
 						pygame.display.flip()
-					if tsfine:
+					if tsfine and  (makewallx == ((mx+(25*zoom)-camx)//(50*zoom)) or makewally == ((my+(25*zoom)-camy)//(50*zoom))):
 						wallx.append(makewallx)
 						wally.append(makewally)
 						wallx1.append(((mx+(25*zoom)-camx)//(50*zoom)))
@@ -451,7 +463,7 @@ while running:
 					makewally = 0
 
 				mouseup = False
-			elif selected_room == -3 and not pygame.Rect(0, scry-100, scrx, 100).collidepoint(mx,my):
+			elif selected_room == -3 and not pygame.Rect(0, scry-100, scrx, 100).collidepoint(mx,my) and not pygame.Rect(0, 0, scrx, 60).collidepoint(mx,my):
 				if (objrot == 270 or objrot == 180):
 					rect =	pygame.Rect((((mx-(doorshadow.get_width()/2)))//(50*zoom)*50*zoom)+10,(((my-camy-(doorshadow.get_height()/2)))//(50*zoom)*50*zoom)+camy+10,pygame.transform.scale(pygame.transform.rotate(doorshadow,objrot),(pygame.transform.rotate(doorshadow,objrot).get_width()*zoom,pygame.transform.rotate(doorshadow,objrot).get_height()*zoom)).get_width()-30   ,  pygame.transform.scale(pygame.transform.rotate(doorshadow,objrot),(pygame.transform.rotate(doorshadow,objrot).get_width()*zoom,pygame.transform.rotate(doorshadow,objrot).get_height()*zoom)).get_height()-25)
 				elif objrot == 90:
@@ -503,7 +515,7 @@ while running:
 		#show hitboxes
 		if show_hitboxes:		
 			for i in range(len(roomtype)):
-				pygame.draw.rect(screen, (255,0,0),pygame.Rect(roomx[i]*zoom*50+camx+5,roomy[i]*zoom*50+camy+5,(roomwidth[i]*zoom)-10,(roomheight[i]*zoom)-10), 3)
+				pygame.draw.rect(screen, (255,0,0),pygame.Rect(roomx[i]*zoom*50+camx+10*zoom,roomy[i]*zoom*50+camy+10*zoom,(roomwidth[i]*zoom)-20*zoom,(roomheight[i]*zoom)-20*zoom), 3)
 			if selected_room >= 0:
 				pygame.draw.rect(screen, (0,0,255),pygame.Rect((((mx+(25*zoom)-(pygame.transform.scale(rooms[selected_room], (250*zoom,250*zoom)).get_width()/2)-camx)//(50*zoom))*(50*zoom))+camx, (((my+(25*zoom)-(pygame.transform.scale(rooms[selected_room], (250*zoom,250*zoom)).get_height()/2)-camy)//(50*zoom))*(50*zoom))+camy, rooms[selected_room].get_width()/2*zoom, rooms[selected_room].get_height()/2*zoom),3)
 
@@ -528,6 +540,8 @@ while running:
 					pygame.draw.rect(screen,(144,42,0),pygame.Rect((doorx[i]*50*zoom)+10+camx,(doory[i]*50*zoom)+camy+10+(10*zoom)+(pygame.transform.scale(doorclosed,(doorclosed.get_width()*zoom,doorclosed.get_height()*zoom)).get_height()) - pygame.transform.scale(pygame.transform.rotate(doorshadow,doorrot[i]),(pygame.transform.rotate(doorshadow,doorrot[i]).get_width()*zoom,pygame.transform.rotate(doorshadow,doorrot[i]).get_height()*zoom)).get_width()+10   ,pygame.transform.scale(pygame.transform.rotate(doorshadow,doorrot[i]),(pygame.transform.rotate(doorshadow,doorrot[i]).get_width()*zoom,pygame.transform.rotate(doorshadow,doorrot[i]).get_height()*zoom)).get_width()-30,pygame.transform.scale(pygame.transform.rotate(doorshadow,doorrot[i]),(pygame.transform.rotate(doorshadow,doorrot[i]).get_width()*zoom,pygame.transform.rotate(doorshadow,doorrot[i]).get_height()*zoom)).get_height()-20), 3)
 
 		pygame.draw.rect(screen, (100,100,100), pygame.Rect(0, scry-100, scrx, 100))
+		pygame.draw.rect(screen, (100,100,100), pygame.Rect(0, 0, scrx, 60))
+
 		manager.draw_ui(screen)
 		for i in range(len(rooms)):
 			screen.blit(pygame.transform.scale(rooms[i], (50,50)),((70 * i)+30,scry-80))

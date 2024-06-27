@@ -2,7 +2,7 @@
     "button": {
         "font": {
             "name": "font.ttf",
-            "size": "24",
+            "size": "15",
             "regular_path": "font.ttf"
         },
         "colours": {
