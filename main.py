@@ -203,7 +203,22 @@ def indoor(rect):
 			pygame.draw.rect(screen, (0,0,0),pygame.Rect((doorx[i]*50*zoom)+camx+10,(doory[i]*50*zoom)+camy+10+(10*zoom)+(pygame.transform.scale(doorclosed,(doorclosed.get_width()*zoom,doorclosed.get_height()*zoom)).get_height()) - pygame.transform.scale(pygame.transform.rotate(doorshadow,doorrot[i]),(pygame.transform.rotate(doorshadow,doorrot[i]).get_width()*zoom,pygame.transform.rotate(doorshadow,doorrot[i]).get_height()*zoom)).get_width()+10   ,pygame.transform.scale(pygame.transform.rotate(doorshadow,doorrot[i]),(pygame.transform.rotate(doorshadow,doorrot[i]).get_width()*zoom,pygame.transform.rotate(doorshadow,doorrot[i]).get_height()*zoom)).get_width()-30,pygame.transform.scale(pygame.transform.rotate(doorshadow,doorrot[i]),(pygame.transform.rotate(doorshadow,doorrot[i]).get_width()*zoom,pygame.transform.rotate(doorshadow,doorrot[i]).get_height()*zoom)).get_height()-20))
 	return indoor
 	
-
+def wipe():
+	camx = 0
+	camy = 0
+	roomtype.clear()
+	roomx.clear()
+	roomy.clear()
+	roomwidth.clear()
+	roomheight.clear()
+	roomdir.clear()
+	wallx.clear()
+	wally.clear()
+	wallx1.clear()
+	wally1.clear()
+	doorx.clear()
+	doory.clear()
+	doorrot.clear()
 
 screen = pygame.display.set_mode([originalscreenheight, originalscreenwidth])
 scrx, scry = screen.get_size()
@@ -287,6 +302,7 @@ while running:
 				selected_room = -3
 			if event.ui_element == levelback_button:
 				scene = 5
+				wipe()
 				hideui()
 
 		if event.type == pygame.MOUSEBUTTONDOWN:
