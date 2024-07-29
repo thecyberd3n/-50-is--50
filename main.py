@@ -421,19 +421,18 @@ while running:
 			pygame.draw.line(screen, (0,0,0),((i)+camx,8000+camy),((i)+camx,-8000+camy),width=round(5*zoom))
 		for i in range (int(round(-8000*zoom)),int(round(8000*zoom)), int(round(50*zoom))):
 			pygame.draw.line(screen, (0,0,0),(8000+camx,(i)+camy),(-8000+camx,(i)+camy),width=round(5*zoom))
-
 		pygame.draw.line(screen, (255,0,0),(-100+camx,camy),(100+camx,camy),width=round(5*zoom))
 		pygame.draw.line(screen, (255,0,0),(camx,-100+camy),(camx,100+camy),width=round(5*zoom))
+
+		if not len(elevatorx) % 2 == 0 and not selected_room == -4:
+			del elevatorx[len(elevatorx)-1]
+			del elevatory[len(elevatorx)-1]
+			del elevatorrot[len(elevatorx)-1]
 
 		if event.type == pygame.MOUSEBUTTONUP:
 			mouseup = True
 
 		if event.type == pygame.MOUSEBUTTONDOWN:
-			if len(elevatorx) % 2 == 1 and not selected_room == -4:
-				del elevatorx[len(elevatorx)]
-				del elevatory[len(elevatorx)]
-				del elevatorrot[len(elevatorx)]
-
 			if selected_room >= 0 and not pygame.Rect(0, scry-100, scrx, 100).collidepoint(mx,my) and touchingroom == False  and not pygame.Rect(0, 0, scrx, 60).collidepoint(mx,my):
 				roomtype.append(selected_room)
 				roomx.append((mx+(25*zoom)-(pygame.transform.scale(rooms[selected_room], (250*zoom,250*zoom)).get_width()/2)-camx)//(50*zoom))
@@ -566,6 +565,10 @@ while running:
 					elevatory.append(((my+(25*zoom)-(pygame.transform.scale(elevator, (200*zoom,200*zoom)).get_height()/2)-camy)//(50*zoom)))
 					elevatorrot.append(objrot)
 
+		for i in range(len(doorx)):
+			screen.blit(pygame.transform.scale(pygame.transform.rotate(doorclosed,doorrot[i]),(pygame.transform.rotate(doorclosed,doorrot[i]).get_width()*zoom,pygame.transform.rotate(doorclosed,doorrot[i]).get_height()*zoom)), ((doorx[i]*50*zoom)+camx, (doory[i]*50*zoom)+camy))
+		for i in range(len(elevatorx)):
+			screen.blit(pygame.transform.scale(pygame.transform.rotate(elevator,elevatorrot[i]),(pygame.transform.rotate(elevator,elevatorrot[i]).get_width()*zoom,pygame.transform.rotate(elevator,elevatorrot[i]).get_height()*zoom)), ((elevatorx[i]*50*zoom)+camx, (elevatory[i]*50*zoom)+camy))
 
 
 		for i in range(len(roomtype)):
@@ -591,13 +594,15 @@ while running:
 		elif selected_room == -4:
 			if not insomething(pygame.Rect((((mx+(25*zoom)-(pygame.transform.scale(elevator, (200*zoom,200*zoom)).get_width()/2)-camx)//(50*zoom))*50*zoom)+camx+(10*zoom),(((my+(25*zoom)-(pygame.transform.scale(elevator, (200*zoom,200*zoom)).get_height()/2)-camy)//(50*zoom))*50*zoom)+camy+(10*zoom),200*zoom-(20*zoom),200*zoom-(20*zoom))):
 				screen.blit(pygame.transform.rotate(pygame.transform.scale(elevator, (200*zoom,200*zoom)), objrot),((((mx+(25*zoom)-(pygame.transform.scale(elevator, (200*zoom,200*zoom)).get_width()/2)-camx)//(50*zoom))*(50*zoom))+camx,(((my+(50*zoom)-(pygame.transform.scale(elevator, (250*zoom,250*zoom)).get_height()/2)-camy)//(50*zoom))*(50*zoom))+camy))
+			if not len(elevatorx) % 2 == 0:
+				pygame.draw.line(screen, (255,0,0), ((elevatorx[len(elevatorx)-1]*50*zoom)+camx+(100*zoom),(elevatory[len(elevatorx)-1]*50*zoom)+camy+(100*zoom)),(((((mx+(25*zoom)-(pygame.transform.scale(elevator, (200*zoom,200*zoom)).get_width()/2)-camx)//(50*zoom))*(50*zoom))+camx+(100*zoom),(((my+(50*zoom)-(pygame.transform.scale(elevator, (250*zoom,250*zoom)).get_height()/2)-camy)//(50*zoom))*(50*zoom))+camy+(100*zoom))), 10)
+			
+			if len(elevatorx) >= 2 and len(elevatorx) % 2 == 0:
+				for i in range(int(len(elevatorx)/2)):
+					pygame.draw.line(screen, (255,0,0), ((elevatorx[i*2-1]*50*zoom)+camx+(100*zoom),(elevatory[i*2-1]*50*zoom)+camy+(100*zoom)),((elevatorx[i*2-2]*50*zoom)+camx+(100*zoom),(elevatory[i*2-2]*50*zoom)+camy+(100*zoom)), 10)
 
 
 
-		for i in range(len(doorx)):
-			screen.blit(pygame.transform.scale(pygame.transform.rotate(doorclosed,doorrot[i]),(pygame.transform.rotate(doorclosed,doorrot[i]).get_width()*zoom,pygame.transform.rotate(doorclosed,doorrot[i]).get_height()*zoom)), ((doorx[i]*50*zoom)+camx, (doory[i]*50*zoom)+camy))
-		for i in range(len(elevatorx)):
-			screen.blit(pygame.transform.scale(pygame.transform.rotate(elevator,elevatorrot[i]),(pygame.transform.rotate(elevator,elevatorrot[i]).get_width()*zoom,pygame.transform.rotate(elevator,elevatorrot[i]).get_height()*zoom)), ((elevatorx[i]*50*zoom)+camx, (elevatory[i]*50*zoom)+camy))
 
 		#show hitboxes
 		if show_hitboxes:		
