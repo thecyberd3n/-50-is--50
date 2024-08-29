@@ -13,9 +13,7 @@ font = pygame.freetype.Font("font.ttf", 15)
 TODO
 
 level builder
--put in elevators 
--seperate .py files
--make special item and entrance
+-make special item, enemy and entrance
 -make saving
 -make loading
 -make playing - make sure its easy to intergrate
@@ -129,16 +127,27 @@ elevatorrot = []
 
 elevator = pygame.image.load("elevator.png")
 
+filex = 0
+filey = 0
+file = pygame.transform.scale(pygame.image.load("file.png"), (50,50))
+
 placewalls_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((scrx-620,scry-90), (140, 70)),text='Place Walls',manager=manager)
 placedoors_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((scrx-480,scry-90), (140, 70)),text='Place Doors',manager=manager)
 placeelevators_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((scrx-240,scry-90), (140, 70)),text='Place Elevators',manager=manager)
 delete_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((scrx-140,scry-90), (100, 70)),text='Delete',manager=manager)
 
+
 playlevel_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((scrx-140,10), (140, 40)),text='Play Level',manager=manager)
 savelevel_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((scrx-280,10), (140, 40)),text='Save Level',manager=manager)
 togglehitboxes_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((scrx-420,10), (140, 40)),text='Show Hitboxes',manager=manager)
-levelback_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10,10), (140, 40)),text='Back',manager=manager)
+levelback_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10,10), (80, 40)),text='Back',manager=manager)
+placefile_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10,10), (140, 40)),text='Place File',manager=manager)
+placeentrance_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10,10), (140, 40)),text='Place Entrance',manager=manager)
+placeenemy_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10,10), (140, 40)),text='Place Enemy',manager=manager)
 
+placeenemy_button.hide()
+placeentrance_button.hide()
+placefile_button.hide()
 placeelevators_button.hide()
 levelback_button.hide()
 placewalls_button.hide()
@@ -176,6 +185,10 @@ def updateui():
 	savelevel_button.set_position((scrx-280,10))
 	togglehitboxes_button.set_position((scrx-420,10))
 	levelback_button.set_position((10,10))
+	placefile_button.set_position((scrx-560,10))
+	placeentrance_button.set_position((scrx-700,10))
+	placeenemy_button.set_position((scrx-840,10))
+
 
 def hideui():
 	singleplayer_button.hide()
@@ -199,6 +212,11 @@ def hideui():
 	delete_button.hide()
 	placeelevators_button.hide()
 	levelback_button.hide()
+	placefile_button.hide()
+	placeentrance_button.hide()
+	placeenemy_button.hide()
+
+
 def inwall(rect):
 	#pygame.Rect.colliderect(rect1, rect)
 	for i in range(len(wallx)):
@@ -343,6 +361,8 @@ while running:
 				selected_room = -3
 			if event.ui_element == placeelevators_button:
 				selected_room = -4
+			if event.ui_element == placefile_button:
+				selected_room = -5
 			if event.ui_element == levelback_button:
 				scene = 5
 				wipe()
@@ -408,6 +428,9 @@ while running:
 		delete_button.show()
 		placeelevators_button.show()
 		levelback_button.show()
+		placefile_button.show()
+		placeentrance_button.show()
+		placeenemy_button.show()
 
 		touchingroom = False			
 		if len(roomtype) > 0 and selected_room >= 0:
@@ -564,12 +587,18 @@ while running:
 					elevatorx.append(((mx+(25*zoom)-(pygame.transform.scale(elevator, (200*zoom,200*zoom)).get_width()/2)-camx)//(50*zoom)))
 					elevatory.append(((my+(25*zoom)-(pygame.transform.scale(elevator, (200*zoom,200*zoom)).get_height()/2)-camy)//(50*zoom)))
 					elevatorrot.append(objrot)
+			elif selected_room == -5 and not pygame.Rect(0, scry-100, scrx, 100).collidepoint(mx,my) and not pygame.Rect(0, 0, scrx, 60).collidepoint(mx,my):
+				if not insomething( pygame.Rect((((mx-camx)//(50*zoom)))*(50*zoom)+camx, (((my-camy)//(50*zoom)))*(50*zoom)+camy, pygame.transform.scale(file,(file.get_width()*zoom,file.get_height()*zoom)).get_height() ,pygame.transform.scale(file,(file.get_width()*zoom,file.get_height()*zoom)).get_width())):
+					filex=(mx-camx)//(50*zoom)
+					filey=(my-camy)//(50*zoom)
+
 
 		for i in range(len(doorx)):
 			screen.blit(pygame.transform.scale(pygame.transform.rotate(doorclosed,doorrot[i]),(pygame.transform.rotate(doorclosed,doorrot[i]).get_width()*zoom,pygame.transform.rotate(doorclosed,doorrot[i]).get_height()*zoom)), ((doorx[i]*50*zoom)+camx, (doory[i]*50*zoom)+camy))
 		for i in range(len(elevatorx)):
 			screen.blit(pygame.transform.scale(pygame.transform.rotate(elevator,elevatorrot[i]),(pygame.transform.rotate(elevator,elevatorrot[i]).get_width()*zoom,pygame.transform.rotate(elevator,elevatorrot[i]).get_height()*zoom)), ((elevatorx[i]*50*zoom)+camx, (elevatory[i]*50*zoom)+camy))
 
+		screen.blit(pygame.transform.scale(file,(file.get_width()*zoom,file.get_height()*zoom)), (filex*(50*zoom)+camx, filey*(50*zoom)+camy))
 
 		for i in range(len(roomtype)):
 			screen.blit(pygame.transform.rotate(pygame.transform.scale(rooms[roomtype[i]], (250*zoom,250*zoom)),roomdir[i]),(((roomx[i])*(50*zoom))+camx,((roomy[i])*(50*zoom))+camy))
@@ -600,7 +629,9 @@ while running:
 			if len(elevatorx) >= 2 and len(elevatorx) % 2 == 0:
 				for i in range(int(len(elevatorx)/2)):
 					pygame.draw.line(screen, (255,0,0), ((elevatorx[i*2-1]*50*zoom)+camx+(100*zoom),(elevatory[i*2-1]*50*zoom)+camy+(100*zoom)),((elevatorx[i*2-2]*50*zoom)+camx+(100*zoom),(elevatory[i*2-2]*50*zoom)+camy+(100*zoom)), 10)
-
+		elif selected_room == -5:
+			if not insomething( pygame.Rect((((mx-camx)//(50*zoom)))*(50*zoom)+camx, (((my-camy)//(50*zoom)))*(50*zoom)+camy, pygame.transform.scale(file,(file.get_width()*zoom,file.get_height()*zoom)).get_height() ,pygame.transform.scale(file,(file.get_width()*zoom,file.get_height()*zoom)).get_width())):
+				screen.blit(pygame.transform.scale(file,(file.get_width()*zoom,file.get_height()*zoom)), ((((mx-camx)//(50*zoom)))*(50*zoom)+camx, (((my-camy)//(50*zoom)))*(50*zoom)+camy))
 
 
 
@@ -632,7 +663,7 @@ while running:
 					pygame.draw.rect(screen,(144,42,0),pygame.Rect((doorx[i]*50*zoom)+10+camx,(doory[i]*50*zoom)+camy+10+(10*zoom)+(pygame.transform.scale(doorclosed,(doorclosed.get_width()*zoom,doorclosed.get_height()*zoom)).get_height()) - pygame.transform.scale(pygame.transform.rotate(doorshadow,doorrot[i]),(pygame.transform.rotate(doorshadow,doorrot[i]).get_width()*zoom,pygame.transform.rotate(doorshadow,doorrot[i]).get_height()*zoom)).get_width()+10   ,pygame.transform.scale(pygame.transform.rotate(doorshadow,doorrot[i]),(pygame.transform.rotate(doorshadow,doorrot[i]).get_width()*zoom,pygame.transform.rotate(doorshadow,doorrot[i]).get_height()*zoom)).get_width()-30,pygame.transform.scale(pygame.transform.rotate(doorshadow,doorrot[i]),(pygame.transform.rotate(doorshadow,doorrot[i]).get_width()*zoom,pygame.transform.rotate(doorshadow,doorrot[i]).get_height()*zoom)).get_height()-20), 3)
 			for i in range(len(elevatorx)):
 				pygame.draw.rect(screen,(53,174,35),pygame.Rect((elevatorx[i]*50*zoom)+camx+(10*zoom),(elevatory[i]*50*zoom)+camy+(10*zoom),200*zoom-(20*zoom),200*zoom-(20*zoom)),3)
-
+			pygame.draw.rect(screen, (43,120,200),pygame.Rect(filex*(50*zoom)+camx, filey*(50*zoom)+camy, pygame.transform.scale(file,(file.get_width()*zoom,file.get_height()*zoom)).get_height() ,pygame.transform.scale(file,(file.get_width()*zoom,file.get_height()*zoom)).get_width()),3)
 
 
 		pygame.draw.rect(screen, (100,100,100), pygame.Rect(0, scry-100, scrx, 100))
