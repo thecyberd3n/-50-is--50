@@ -131,6 +131,14 @@ filex = 0
 filey = 0
 file = pygame.transform.scale(pygame.image.load("file.png"), (50,50))
 
+entrancex = 0
+entrancey = 0
+entrancerot = 0
+
+entranceclosed = pygame.image.load("entranceclosed.png")
+entranceopen = pygame.image.load("entranceopen.png")
+entranceshadow = pygame.image.load("entranceshadow.png")
+
 placewalls_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((scrx-620,scry-90), (140, 70)),text='Place Walls',manager=manager)
 placedoors_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((scrx-480,scry-90), (140, 70)),text='Place Doors',manager=manager)
 placeelevators_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((scrx-240,scry-90), (140, 70)),text='Place Elevators',manager=manager)
@@ -363,6 +371,8 @@ while running:
 				selected_room = -4
 			if event.ui_element == placefile_button:
 				selected_room = -5
+			if event.ui_element == placeentrance_button:
+				selected_room = -6
 			if event.ui_element == levelback_button:
 				scene = 5
 				wipe()
@@ -632,6 +642,10 @@ while running:
 		elif selected_room == -5:
 			if not insomething( pygame.Rect((((mx-camx)//(50*zoom)))*(50*zoom)+camx, (((my-camy)//(50*zoom)))*(50*zoom)+camy, pygame.transform.scale(file,(file.get_width()*zoom,file.get_height()*zoom)).get_height() ,pygame.transform.scale(file,(file.get_width()*zoom,file.get_height()*zoom)).get_width())):
 				screen.blit(pygame.transform.scale(file,(file.get_width()*zoom,file.get_height()*zoom)), ((((mx-camx)//(50*zoom)))*(50*zoom)+camx, (((my-camy)//(50*zoom)))*(50*zoom)+camy))
+		elif selected_room == -6:
+			if not insomething( pygame.Rect((((mx-camx)//(50*zoom)))*(50*zoom)+camx, (((my-camy)//(50*zoom)))*(50*zoom)+camy, pygame.transform.scale(entranceshadow,(entranceshadow.get_width()*zoom,entranceshadow.get_height()*zoom)).get_height() ,pygame.transform.scale(entranceshadow,(entranceshadow.get_width()*zoom,entranceshadow.get_height()*zoom)).get_width())):
+				screen.blit(pygame.transform.scale(entranceshadow,(entranceshadow.get_width()*zoom,entranceshadow.get_height()*zoom)), ((((mx-camx)//(50*zoom)))*(50*zoom)+camx, (((my-camy)//(50*zoom)))*(50*zoom)+camy))
+
 
 
 
